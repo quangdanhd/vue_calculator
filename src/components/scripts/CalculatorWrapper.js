@@ -10,7 +10,7 @@ export default {
         "*": '<span><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" class="bi bi-x" viewBox="0 0 16 16"><path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"></path></svg></span>',
         "/": '<span><svg width="1em" height="1em" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M5 10C5 9.83424 5.06585 9.67527 5.18306 9.55806C5.30027 9.44085 5.45924 9.375 5.625 9.375H14.375C14.5408 9.375 14.6997 9.44085 14.8169 9.55806C14.9342 9.67527 15 9.83424 15 10C15 10.1658 14.9342 10.3247 14.8169 10.4419C14.6997 10.5592 14.5408 10.625 14.375 10.625H5.625C5.45924 10.625 5.30027 10.5592 5.18306 10.4419C5.06585 10.3247 5 10.1658 5 10Z" fill="currentColor"></path><circle cx="10" cy="7" r="1" fill="currentColor"></circle><circle cx="10" cy="13" r="1" fill="currentColor"></circle></svg></span>',
       },
-      rules: ["+", "-", "*", "/", "%", "."],
+      result: null,
     };
   },
   methods: {
@@ -18,21 +18,122 @@ export default {
       this.darkMode = !this.darkMode;
     },
     addOperation(data) {
-      if (this.rules.includes(data)) {
-        this.operationRule(data);
-      } else {
-        this.operation.push(data);
+      switch (data) {
+        case "-":
+          this.rule1(data);
+          break;
+        case "+":
+        case "*":
+        case "/":
+          this.rule2(data);
+          break;
+        case ".":
+          this.rule3(data);
+          break;
+        case "%":
+          this.rule4(data);
+          break;
+        case 0:
+          this.rule5(data);
+          break;
+        default:
+          this.rule6(data);
       }
       // text
       this.createOperationText();
     },
-    operationRule(data) {
+    rule1(data) {
+      // -
+      const len = this.operation.length;
+      if (!len) {
+        this.operation.push(data);
+        return;
+      }
+      if (["+", "-", "*", "/"].includes(this.operation[len - 1])) {
+        this.operation[len - 1] = data;
+        return;
+      }
+      this.operation.push(data);
+    },
+    rule2(data) {
+      // +, *, /
       const len = this.operation.length;
       if (!len) {
         return;
       }
-      if (this.rules.includes(this.operation[len - 1])) {
+      if (
+        len === 1 &&
+        !this.result &&
+        ["+", "-", "*", "/"].includes(this.operation[len - 1])
+      ) {
+        this.operation = [];
+        return;
+      }
+      if (["+", "-", "*", "/"].includes(this.operation[len - 1])) {
         this.operation[len - 1] = data;
+        return;
+      }
+      this.operation.push(data);
+    },
+    rule3(data) {
+      // .
+      const len = this.operation.length;
+      if (!len) {
+        this.operation.push(data);
+        return;
+      }
+      if ([".", "%"].includes(this.operation[len - 1])) {
+        return;
+      }
+      if (/\.\d+$/.test(this.operation.join(""))) {
+        return;
+      }
+      this.operation.push(data);
+    },
+    rule4(data) {
+      // %
+      if (this.result) {
+        return;
+      }
+      const len = this.operation.length;
+      if (!len) {
+        return;
+      }
+      if (["+", "-", "*", "/"].includes(this.operation[len - 1])) {
+        return;
+      }
+      if (this.operation[len - 1] === ".") {
+        this.operation[len - 1] = data;
+        return;
+      }
+      this.operation.push(data);
+    },
+    rule5(data) {
+      // 0
+      const len = this.operation.length;
+      if (!len) {
+        this.operation.push(data);
+        return;
+      }
+      if (["%"].includes(this.operation[len - 1])) {
+        return;
+      }
+      if (/^0+$/.test(this.operation.join(""))) {
+        return;
+      }
+      if (this.operation.join("").match(/(.)\d+$/)) {
+        console.log(this.operation.join("").match(/(.)\d+$/));
+      }
+      this.operation.push(data);
+    },
+    rule6(data) {
+      // 1 - 9
+      const len = this.operation.length;
+      if (!len) {
+        this.operation.push(data);
+        return;
+      }
+      if (["%"].includes(this.operation[len - 1])) {
         return;
       }
       this.operation.push(data);

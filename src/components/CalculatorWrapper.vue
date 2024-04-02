@@ -39,7 +39,7 @@
       </button>
       <header class="calculator-header">
         <div class="calculator-operation" v-html="operationText"></div>
-        <div class="calculator-operation-result">7,895</div>
+        <div class="calculator-operation-result">{{ result }}</div>
       </header>
       <main class="calculator-body"></main>
       <div class="calculator-button-wrapper">
