@@ -70,10 +70,19 @@ body {
     margin-bottom: 4px;
     overflow: hidden;
     text-overflow: ellipsis;
+    -webkit-transition: font-size 0.1s;
+    &.active {
+      font-size: 140%;
+    }
     &-result {
       height: 48.5px;
       font-size: 42px;
       font-weight: bold;
+      -webkit-transition: line-height 0.2s;
+      line-height: 1;
+      &.active {
+        line-height: 4;
+      }
     }
   }
 

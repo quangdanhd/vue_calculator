@@ -38,8 +38,17 @@
         </svg>
       </button>
       <header class="calculator-header">
-        <div class="calculator-operation" v-html="operationText"></div>
-        <div class="calculator-operation-result">{{ result }}</div>
+        <div
+          class="calculator-operation"
+          :class="{ active: operationActive }"
+          v-html="operationText"
+        ></div>
+        <div
+          class="calculator-operation-result"
+          :class="{ active: operationActive }"
+        >
+          {{ result }}
+        </div>
       </header>
       <main class="calculator-body"></main>
       <div class="calculator-button-wrapper">
@@ -207,7 +216,11 @@
         >
           <span>3</span>
         </button>
-        <button type="button" class="calculator-button equal">
+        <button
+          @click="getResult"
+          type="button"
+          class="calculator-button equal"
+        >
           <span>
             <svg
               width="1em"
