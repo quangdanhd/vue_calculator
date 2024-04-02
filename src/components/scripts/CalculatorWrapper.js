@@ -53,6 +53,9 @@ export default {
         this.operation[len - 1] = data;
         return;
       }
+      if (this.operation[len - 1] === ".") {
+        return;
+      }
       this.operation.push(data);
     },
     rule2(data) {
@@ -71,6 +74,9 @@ export default {
       }
       if (["+", "-", "*", "/"].includes(this.operation[len - 1])) {
         this.operation[len - 1] = data;
+        return;
+      }
+      if (this.operation[len - 1] === ".") {
         return;
       }
       this.operation.push(data);
@@ -103,7 +109,6 @@ export default {
         return;
       }
       if (this.operation[len - 1] === ".") {
-        this.operation[len - 1] = data;
         return;
       }
       this.operation.push(data);
@@ -121,9 +126,6 @@ export default {
       if (/^0+$/.test(this.operation.join(""))) {
         return;
       }
-      if (this.operation.join("").match(/(.)\d+$/)) {
-        console.log(this.operation.join("").match(/(.)\d+$/));
-      }
       this.operation.push(data);
     },
     rule6(data) {
@@ -133,7 +135,17 @@ export default {
         this.operation.push(data);
         return;
       }
+      if (len === 1 && this.operation[len - 1] === 0) {
+        this.operation[len - 1] = data;
+        return;
+      }
       if (["%"].includes(this.operation[len - 1])) {
+        return;
+      }
+      const match1 = this.operation.join("").match(/\d+$/);
+      const match2 = this.operation.join("").match(/\.\d+$/);
+      if (match1 && match1[0] === "0" && !match2) {
+        this.operation[len - 1] = data;
         return;
       }
       this.operation.push(data);
