@@ -45,14 +45,17 @@ export default {
     rule1(data) {
       // -
       const len = this.operation.length;
+      // allow first
       if (!len) {
         this.operation.push(data);
         return;
       }
+      // replace with
       if (["+", "-", "*", "/"].includes(this.operation[len - 1])) {
         this.operation[len - 1] = data;
         return;
       }
+      // disable
       if (this.operation[len - 1] === ".") {
         return;
       }
@@ -61,9 +64,11 @@ export default {
     rule2(data) {
       // +, *, /
       const len = this.operation.length;
+      // disable first
       if (!len) {
         return;
       }
+      // reset
       if (
         len === 1 &&
         !this.result &&
@@ -72,10 +77,12 @@ export default {
         this.operation = [];
         return;
       }
+      // replace with
       if (["+", "-", "*", "/"].includes(this.operation[len - 1])) {
         this.operation[len - 1] = data;
         return;
       }
+      // disable
       if (this.operation[len - 1] === ".") {
         return;
       }
@@ -84,10 +91,12 @@ export default {
     rule3(data) {
       // .
       const len = this.operation.length;
+      // allow first
       if (!len) {
         this.operation.push(data);
         return;
       }
+      // disable
       if ([".", "%"].includes(this.operation[len - 1])) {
         return;
       }
@@ -98,13 +107,16 @@ export default {
     },
     rule4(data) {
       // %
+      // calculate last
       if (this.result) {
         return;
       }
       const len = this.operation.length;
+      // disable first
       if (!len) {
         return;
       }
+      // disable
       if (["+", "-", "*", "/"].includes(this.operation[len - 1])) {
         return;
       }
@@ -116,10 +128,12 @@ export default {
     rule5(data) {
       // 0
       const len = this.operation.length;
+      // allow first
       if (!len) {
         this.operation.push(data);
         return;
       }
+      // disable
       if (["%"].includes(this.operation[len - 1])) {
         return;
       }
@@ -131,17 +145,21 @@ export default {
     rule6(data) {
       // 1 - 9
       const len = this.operation.length;
+      // allow first
       if (!len) {
         this.operation.push(data);
         return;
       }
+      // replace 0
       if (len === 1 && this.operation[len - 1] === 0) {
         this.operation[len - 1] = data;
         return;
       }
+      // disable
       if (["%"].includes(this.operation[len - 1])) {
         return;
       }
+      // replace 0
       const match1 = this.operation.join("").match(/\d+$/);
       const match2 = this.operation.join("").match(/\.\d+$/);
       if (match1 && match1[0] === "0" && !match2) {
