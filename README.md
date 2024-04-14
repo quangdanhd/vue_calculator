@@ -1,3 +1,4 @@
+![Screenshot](public/screenshot.jpg)
 # vue_calculator
 
 ## Project setup
